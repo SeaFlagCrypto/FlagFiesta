@@ -1,1 +1,10 @@
-{}
+{
+  "frame": {
+    "version": "1",
+    "name": "FlagFiesta",
+    "iconUrl": "https://flag-fiesta.vercel.app/icon.png",
+    "homeUrl": "https://flag-fiesta.vercel.app/",
+    "primaryCategory": "games",
+    "tags": ["game", "farcaster", "flags", "catch", "crypto"]
+  }
+}
