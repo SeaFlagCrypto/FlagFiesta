@@ -1,14 +1,15 @@
 {
   "frame": {
-    "version": "1",
+    "version": "1.0",
     "name": "FlagFiesta",
     "iconUrl": "https://flag-fiesta.vercel.app/icon.png",
-    "homeUrl": "https://flag-fiesta.vercel.app/",
+    "homeUrl": "https://flag-fiesta.vercel.app",
     "primaryCategory": "games",
     "tags": ["game", "farcaster", "flags", "catch", "crypto"]
   },
   "embed": {
     "type": "miniapp",
+    "url": "https://flag-fiesta.vercel.app",
     "version": "1.0"
   }
 }
