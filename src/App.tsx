@@ -1,63 +1,20 @@
-import { sdk } from "@farcaster/frame-sdk";
-import { useEffect } from "react";
-import { useAccount, useConnect, useSignMessage } from "wagmi";
+import React from 'react';
+import { Helmet } from 'react-helmet';
 
-function App() {
-  useEffect(() => {
-    sdk.actions.ready();
-  }, []);
-
+const App = () => {
   return (
     <>
-      <div>Mini App + Vite + TS + React + Wagmi</div>
-      <ConnectMenu />
+      <Helmet>
+        <meta name="fc:frame" content="vNext" />
+        <meta name="fc:frame:image" content="https://flag-fiesta.vercel.app/icon.png" />
+        <meta name="fc:frame:post_url" content="https://flag-fiesta.vercel.app" />
+        <title>FlagFiesta</title>
+      </Helmet>
+
+      <h1>Welcome to FlagFiesta!</h1>
+      {/* Add your game logic/UI here */}
     </>
   );
-}
-
-function ConnectMenu() {
-  const { isConnected, address } = useAccount();
-  const { connect, connectors } = useConnect();
-
-  if (isConnected) {
-    return (
-      <>
-        <div>Connected account:</div>
-        <div>{address}</div>
-        <SignButton />
-      </>
-    );
-  }
-
-  return (
-    <button type="button" onClick={() => connect({ connector: connectors[0] })}>
-      Connect
-    </button>
-  );
-}
-
-function SignButton() {
-  const { signMessage, isPending, data, error } = useSignMessage();
-
-  return (
-    <>
-      <button type="button" onClick={() => signMessage({ message: "hello world" })} disabled={isPending}>
-        {isPending ? "Signing..." : "Sign message"}
-      </button>
-      {data && (
-        <>
-          <div>Signature</div>
-          <div>{data}</div>
-        </>
-      )}
-      {error && (
-        <>
-          <div>Error</div>
-          <div>{error.message}</div>
-        </>
-      )}
-    </>
-  );
-}
+};
 
 export default App;
