@@ -6,5 +6,9 @@
     "homeUrl": "https://flag-fiesta.vercel.app/",
     "primaryCategory": "games",
     "tags": ["game", "farcaster", "flags", "catch", "crypto"]
+  },
+  "embed": {
+    "type": "miniapp",
+    "version": "1.0"
   }
 }
