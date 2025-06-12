@@ -1,82 +1,99 @@
-import { sdk } from '@farcaster/frame-sdk';
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App'; // make sure path is correct
+import App from './App';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-
-
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-let basketX = canvas.width/2, score = 0, flags = [], bombs = [];
-let startTime;
-
-sdk.actions.ready().then(startGame);
-
-function startGame() {
-  startTime = Date.now();
-  requestAnimationFrame(gameLoop);
+const root = document.getElementById('root');
+if (root) {
+  ReactDOM.createRoot(root).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
 }
 
-function gameLoop() {
-  const elapsed = (Date.now() - startTime) / 1000;
-  if (elapsed >= 30) return endGame();
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
-}
+// Game logic
+window.onload = () => {
+  const canvas = document.getElementById('game') as HTMLCanvasElement | null;
+  if (!canvas) return;
 
-function update() {
-  if (Math.random() < 0.02) flags.push({ x: Math.random()*(canvas.width-20), y: 0 });
-  if (Math.random() < 0.01) bombs.push({ x: Math.random()*(canvas.width-20), y: 0 });
-  flags.forEach(f => f.y += 2);
-  bombs.forEach(b => b.y += 3);
-  checkCollisions();
-}
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
 
-canvas.addEventListener('mousemove', e => {
-  const rect = canvas.getBoundingClientRect();
-  basketX = e.clientX - rect.left - 40; // center on mouse
-});
+  interface FallingObject {
+    x: number;
+    y: number;
+    type: 'flag' | 'bomb';
+  }
 
-function checkCollisions() {
-  flags = flags.filter(f => {
-    if (f.y > canvas.height - 20 && f.x > basketX && f.x < basketX+80) {
-      score++;
-      document.getElementById('score').textContent = `Score: ${score}`;
-      return false;
-    }
-    return f.y < canvas.height;
+  let flags: FallingObject[] = [];
+  let bombs: FallingObject[] = [];
+  let basketX = 350;
+  const basketWidth = 100;
+  let score = 0;
+  let startTime = Date.now();
+
+  const spawnObject = (type: 'flag' | 'bomb') => {
+    const x = Math.random() * (canvas.width - 20);
+    const obj: FallingObject = { x, y: 0, type };
+    (type === 'flag' ? flags : bombs).push(obj);
+  };
+
+  const draw = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw basket
+    ctx.fillStyle = 'brown';
+    ctx.fillRect(basketX, canvas.height - 30, basketWidth, 20);
+
+    // Draw flags
+    ctx.fillStyle = 'blue';
+    flags.forEach(flag => {
+      flag.y += 3;
+      ctx.fillRect(flag.x, flag.y, 20, 20);
+    });
+
+    // Draw bombs
+    ctx.fillStyle = 'red';
+    bombs.forEach(bomb => {
+      bomb.y += 4;
+      ctx.beginPath();
+      ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Check for collisions
+    flags = flags.filter(flag => {
+      const caught = flag.y > canvas.height - 50 && flag.x > basketX && flag.x < basketX + basketWidth;
+      if (caught) score += 1;
+      return !caught && flag.y < canvas.height;
+    });
+
+    bombs = bombs.filter(bomb => {
+      const hit = bomb.y > canvas.height - 50 && bomb.x > basketX && bomb.x < basketX + basketWidth;
+      if (hit) score = 0;
+      return !hit && bomb.y < canvas.height;
+    });
+
+    // Score
+    ctx.fillStyle = 'black';
+    ctx.fillText(`Score: ${score}`, 10, 20);
+  };
+
+  document.addEventListener('mousemove', (e) => {
+    basketX = e.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
   });
-  bombs = bombs.filter(b => {
-    if (b.y > canvas.height - 20 && b.x > basketX && b.x < basketX+80) {
-      score = 0; 
-      document.getElementById('score').textContent = `Score: ${score}`;
-      return false;
+
+  const loop = () => {
+    if (Date.now() - startTime < 30000) {
+      draw();
+      if (Math.random() < 0.03) spawnObject('flag');
+      if (Math.random() < 0.01) spawnObject('bomb');
+      requestAnimationFrame(loop);
+    } else {
+      ctx.fillStyle = 'black';
+      ctx.fillText(`Game Over! Final Score: ${score}`, 300, 300);
     }
-    return b.y < canvas.height;
-  });
-}
+  };
 
-function draw() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  flags.forEach(f => { ctx.fillStyle='blue'; ctx.fillRect(f.x,f.y,20,20); });
-  bombs.forEach(b => { ctx.fillStyle='red'; ctx.beginPath(); ctx.arc(b.x+10,b.y+10,10,0,2*Math.PI); ctx.fill(); });
-  ctx.fillStyle='black';
-  ctx.fillRect(basketX, canvas.height-20, 80, 20);
-}
-
-function endGame() {
-  ctx.fillStyle = 'rgba(0,0,0,0.7)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#fff';
-  ctx.font = '24px sans-serif';
-  ctx.fillText(`Time’s up! Final: ${score}`, 40, canvas.height/2);
-}
-
-
+  loop();
+};
