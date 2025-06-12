@@ -9,11 +9,5 @@
         }
       ]
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/frame",
-      "destination": "/api/frame.js"
-    }
   ]
 }
