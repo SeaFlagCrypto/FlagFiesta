@@ -1,4 +1,3 @@
-
 {
   "accountAssociation": {
     "header": "eyJmaWQiOjE2OTQ4LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4MEJmZERDM2MwMTk0YjMzQUJBMzExOTc1MTM3ZTI1QjFENzNmNUYwNyJ9",
@@ -10,13 +9,7 @@
     "name": "FlagFiesta",
     "iconUrl": "https://flag-fiesta.vercel.app/icon.png",
     "homeUrl": "https://flag-fiesta.vercel.app",
-    "imageUrl": "https://flag-fiesta.vercel.app/icon.png",
-    "buttonTitle": "Check this out",
-    "splashImageUrl": "https://flag-fiesta.vercel.app/splash.png",
-    "splashBackgroundColor": "#eeccff",
-    "webhookUrl": "https://flag-fiesta.vercel.app/api/webhook",
-    "primaryCategory": "games",
-    "tags": ["game", "farcaster", "flags", "catch", "crypto"]
+    "buttonTitle": "Check this out"    
   }
   "embed": {
     "type": "miniapp",
