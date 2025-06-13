@@ -8,6 +8,16 @@
           "value": "application/json"
         }
       ]
+    },
+    {
+      "source": "/api/frame",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ]
     }
   ]
 }
+
