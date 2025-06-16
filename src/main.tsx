@@ -1,17 +1,16 @@
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById("game") as HTMLCanvasElement | null;
+
   if (!canvas) {
     console.error("Canvas element not found!");
     return;
   }
 
-  const context = canvas.getContext("2d");
-  if (!context) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
     console.error("2D context not available!");
     return;
   }
-
-  const ctx = context as CanvasRenderingContext2D;
 
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -31,7 +30,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const flags: { x: number; y: number }[] = [];
   const bombs: { x: number; y: number }[] = [];
 
-  // Input
   canvas.addEventListener("mousemove", (e) => {
     basketX = e.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
   });
