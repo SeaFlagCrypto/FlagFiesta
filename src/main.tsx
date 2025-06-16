@@ -1,29 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
 const App = () => {
-  React.useEffect(() => {
+  useEffect(() => {
     const canvas = document.getElementById("game") as HTMLCanvasElement | null;
-
-    if (!canvas) {
-      console.error("Canvas element not found!");
-      return;
-    }
+    if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      console.error("2D context not available!");
-      return;
-    }
+    if (!ctx) return;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    window.addEventListener("resize", () => {
+    const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-    });
+    };
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
 
     const basketWidth = 80;
     const basketHeight = 20;
@@ -31,7 +23,7 @@ const App = () => {
     const basketY = canvas.height - basketHeight - 10;
 
     let score = 0;
-    let startTime: number;
+    let startTime = Date.now();
     const flags: { x: number; y: number }[] = [];
     const bombs: { x: number; y: number }[] = [];
 
@@ -44,41 +36,41 @@ const App = () => {
       basketX = touch.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
     });
 
-    function drawBasket() {
+    const drawBasket = () => {
       ctx.fillStyle = "blue";
       ctx.fillRect(basketX, basketY, basketWidth, basketHeight);
-    }
+    };
 
-    function drawFlags() {
+    const drawFlags = () => {
       ctx.fillStyle = "green";
       flags.forEach((flag) => {
         ctx.fillRect(flag.x, flag.y, 20, 20);
       });
-    }
+    };
 
-    function drawBombs() {
+    const drawBombs = () => {
       ctx.fillStyle = "red";
       bombs.forEach((bomb) => {
         ctx.beginPath();
         ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
         ctx.fill();
       });
-    }
+    };
 
-    function drawScore() {
+    const drawScore = () => {
       ctx.fillStyle = "black";
       ctx.font = "20px Arial";
       ctx.fillText(`Score: ${score}`, 10, 30);
-    }
+    };
 
-    function resetGame() {
+    const resetGame = () => {
       score = 0;
       flags.length = 0;
       bombs.length = 0;
       startTime = Date.now();
-    }
+    };
 
-    function updateGame() {
+    const updateGame = () => {
       const elapsed = (Date.now() - startTime) / 1000;
       if (elapsed > 30) return;
 
@@ -90,8 +82,8 @@ const App = () => {
         bombs.push({ x: Math.random() * (canvas.width - 20), y: 0 });
       }
 
-      flags.forEach((flag) => flag.y += 3);
-      bombs.forEach((bomb) => bomb.y += 4);
+      flags.forEach((flag) => (flag.y += 3));
+      bombs.forEach((bomb) => (bomb.y += 4));
 
       for (let i = flags.length - 1; i >= 0; i--) {
         const flag = flags[i];
@@ -116,24 +108,28 @@ const App = () => {
           score = 0;
         }
       }
-    }
+    };
 
-    function draw() {
+    const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawBasket();
       drawFlags();
       drawBombs();
       drawScore();
-    }
+    };
 
-    function gameLoop() {
+    const gameLoop = () => {
       updateGame();
       draw();
       requestAnimationFrame(gameLoop);
-    }
+    };
 
     resetGame();
     gameLoop();
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+    };
   }, []);
 
   return <canvas id="game" />;
