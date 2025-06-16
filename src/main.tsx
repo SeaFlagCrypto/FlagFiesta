@@ -5,10 +5,16 @@ import './index.css';
 const App = () => {
   useEffect(() => {
     const canvas = document.getElementById("game") as HTMLCanvasElement | null;
-    if (!canvas) return;
+    if (!canvas) {
+      console.error("Canvas element not found.");
+      return;
+    }
 
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!ctx) {
+      console.error("Canvas context not available.");
+      return;
+    }
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -32,9 +38,10 @@ const App = () => {
     });
 
     canvas.addEventListener("touchmove", (e) => {
+      e.preventDefault(); // Prevents scrolling on touch
       const touch = e.touches[0];
       basketX = touch.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
-    });
+    }, { passive: false });
 
     const drawBasket = () => {
       ctx.fillStyle = "blue";
@@ -43,14 +50,12 @@ const App = () => {
 
     const drawFlags = () => {
       ctx.fillStyle = "green";
-      flags.forEach((flag) => {
-        ctx.fillRect(flag.x, flag.y, 20, 20);
-      });
+      flags.forEach(flag => ctx.fillRect(flag.x, flag.y, 20, 20));
     };
 
     const drawBombs = () => {
       ctx.fillStyle = "red";
-      bombs.forEach((bomb) => {
+      bombs.forEach(bomb => {
         ctx.beginPath();
         ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
         ctx.fill();
@@ -77,13 +82,12 @@ const App = () => {
       if (Math.random() < 0.05) {
         flags.push({ x: Math.random() * (canvas.width - 20), y: 0 });
       }
-
       if (Math.random() < 0.02) {
         bombs.push({ x: Math.random() * (canvas.width - 20), y: 0 });
       }
 
-      flags.forEach((flag) => (flag.y += 3));
-      bombs.forEach((bomb) => (bomb.y += 4));
+      flags.forEach(flag => flag.y += 3);
+      bombs.forEach(bomb => bomb.y += 4);
 
       for (let i = flags.length - 1; i >= 0; i--) {
         const flag = flags[i];
@@ -132,7 +136,7 @@ const App = () => {
     };
   }, []);
 
-  return <canvas id="game" />;
+  return <canvas id="game" style={{ display: 'block', width: '100%', height: '100vh' }} />;
 };
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
