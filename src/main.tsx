@@ -12,19 +12,18 @@ window.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  const basketWidth = 80;
-  const basketHeight = 20;
-  let basketX = 0;
-  let basketY: number;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-  const resizeCanvas = () => {
+  window.addEventListener("resize", () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    basketY = canvas.height - basketHeight - 20; // Slight offset for visibility
-  };
+  });
 
-  window.addEventListener("resize", resizeCanvas);
-  resizeCanvas(); // Initial call
+  const basketWidth = 80;
+  const basketHeight = 20;
+  let basketX = canvas.width / 2 - basketWidth / 2;
+  const basketY = canvas.height - basketHeight - 10;
 
   let score = 0;
   let startTime: number;
@@ -36,10 +35,9 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   canvas.addEventListener("touchmove", (e) => {
-    e.preventDefault(); // Important for mobile responsiveness
     const touch = e.touches[0];
     basketX = touch.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
-  }, { passive: false });
+  });
 
   function drawBasket() {
     ctx.fillStyle = "blue";
