@@ -16,6 +16,14 @@ window.onload = () => {
   const canvas = document.getElementById('game') as HTMLCanvasElement | null;
   if (!canvas) return;
 
+  // Dynamic size
+  const resizeCanvas = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  };
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
@@ -27,7 +35,7 @@ window.onload = () => {
 
   let flags: FallingObject[] = [];
   let bombs: FallingObject[] = [];
-  let basketX = 350;
+  let basketX = canvas.width / 2 - 50;
   const basketWidth = 100;
   let score = 0;
   let startTime = Date.now();
@@ -41,18 +49,18 @@ window.onload = () => {
   const draw = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw basket
+    // Basket
     ctx.fillStyle = 'brown';
     ctx.fillRect(basketX, canvas.height - 30, basketWidth, 20);
 
-    // Draw flags
+    // Flags
     ctx.fillStyle = 'blue';
     flags.forEach(flag => {
       flag.y += 3;
       ctx.fillRect(flag.x, flag.y, 20, 20);
     });
 
-    // Draw bombs
+    // Bombs
     ctx.fillStyle = 'red';
     bombs.forEach(bomb => {
       bomb.y += 4;
@@ -61,7 +69,7 @@ window.onload = () => {
       ctx.fill();
     });
 
-    // Check for collisions
+    // Collisions
     flags = flags.filter(flag => {
       const caught = flag.y > canvas.height - 50 && flag.x > basketX && flag.x < basketX + basketWidth;
       if (caught) score += 1;
@@ -76,11 +84,19 @@ window.onload = () => {
 
     // Score
     ctx.fillStyle = 'black';
+    ctx.font = '16px sans-serif';
     ctx.fillText(`Score: ${score}`, 10, 20);
   };
 
+  // Desktop mouse move
   document.addEventListener('mousemove', (e) => {
     basketX = e.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
+  });
+
+  // Mobile touch move
+  canvas.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    basketX = touch.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
   });
 
   const loop = () => {
@@ -91,7 +107,8 @@ window.onload = () => {
       requestAnimationFrame(loop);
     } else {
       ctx.fillStyle = 'black';
-      ctx.fillText(`Game Over! Final Score: ${score}`, 300, 300);
+      ctx.font = '20px sans-serif';
+      ctx.fillText(`Game Over! Final Score: ${score}`, canvas.width / 2 - 100, canvas.height / 2);
     }
   };
 

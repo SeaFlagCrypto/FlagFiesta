@@ -11,7 +11,15 @@ const App: React.FC = () => {
         <meta property="og:image" content="https://flag-fiesta.vercel.app/icon.png" />
         <title>FlagFiesta</title>
       </Helmet>
-      <canvas id="game" width="800" height="600" style={{ border: '1px solid black' }} />
+      <canvas
+        id="game"
+        style={{
+          width: '100vw',
+          height: '100vh',
+          display: 'block',
+          touchAction: 'none',
+        }}
+      />
     </>
   );
 };
