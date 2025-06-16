@@ -1,29 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FlagFiesta</title>
-
-    <!-- ✅ Farcaster Meta Tags -->
     <meta name="fc:frame" content="vNext" />
     <meta name="fc:frame:image" content="https://flag-fiesta.vercel.app/icon.png" />
     <meta name="fc:frame:post_url" content="https://flag-fiesta.vercel.app/api/frame" />
     <meta name="fc:frame:button:1" content="Play Now" />
-
-    <!-- ✅ Open Graph Fallback -->
     <meta property="og:title" content="FlagFiesta" />
     <meta property="og:image" content="https://flag-fiesta.vercel.app/icon.png" />
     <meta property="og:description" content="Catch flags and avoid bombs. Can you top the leaderboard?" />
     <meta property="og:url" content="https://flag-fiesta.vercel.app/" />
-
-    <!-- ✅ Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="FlagFiesta" />
     <meta name="twitter:image" content="https://flag-fiesta.vercel.app/icon.png" />
   </head>
   <body>
-    <canvas id="game" style="width: 100%; height: 100vh; display: block;"></canvas>
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
