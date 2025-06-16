@@ -1,116 +1,134 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-
-const root = document.getElementById('root');
-if (root) {
-  ReactDOM.createRoot(root).render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-}
-
-// Game logic
-window.onload = () => {
-  const canvas = document.getElementById('game') as HTMLCanvasElement | null;
-  if (!canvas) return;
-
-  // Dynamic size
-  const resizeCanvas = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  };
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-
-  interface FallingObject {
-    x: number;
-    y: number;
-    type: 'flag' | 'bomb';
+window.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById("game") as HTMLCanvasElement | null;
+  if (!canvas) {
+    console.error("Canvas element not found!");
+    return;
   }
 
-  let flags: FallingObject[] = [];
-  let bombs: FallingObject[] = [];
-  let basketX = canvas.width / 2 - 50;
-  const basketWidth = 100;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    console.error("2D context not available!");
+    return;
+  }
+
+  // Set canvas dimensions
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  const basketWidth = 80;
+  const basketHeight = 20;
+  let basketX = canvas.width / 2 - basketWidth / 2;
+  const basketY = canvas.height - basketHeight - 10;
+
   let score = 0;
-  let startTime = Date.now();
+  let startTime: number;
+  const flags: { x: number; y: number }[] = [];
+  const bombs: { x: number; y: number }[] = [];
 
-  const spawnObject = (type: 'flag' | 'bomb') => {
-    const x = Math.random() * (canvas.width - 20);
-    const obj: FallingObject = { x, y: 0, type };
-    (type === 'flag' ? flags : bombs).push(obj);
-  };
-
-  const draw = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Basket
-    ctx.fillStyle = 'brown';
-    ctx.fillRect(basketX, canvas.height - 30, basketWidth, 20);
-
-    // Flags
-    ctx.fillStyle = 'blue';
-    flags.forEach(flag => {
-      flag.y += 3;
-      ctx.fillRect(flag.x, flag.y, 20, 20);
-    });
-
-    // Bombs
-    ctx.fillStyle = 'red';
-    bombs.forEach(bomb => {
-      bomb.y += 4;
-      ctx.beginPath();
-      ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
-      ctx.fill();
-    });
-
-    // Collisions
-    flags = flags.filter(flag => {
-      const caught = flag.y > canvas.height - 50 && flag.x > basketX && flag.x < basketX + basketWidth;
-      if (caught) score += 1;
-      return !caught && flag.y < canvas.height;
-    });
-
-    bombs = bombs.filter(bomb => {
-      const hit = bomb.y > canvas.height - 50 && bomb.x > basketX && bomb.x < basketX + basketWidth;
-      if (hit) score = 0;
-      return !hit && bomb.y < canvas.height;
-    });
-
-    // Score
-    ctx.fillStyle = 'black';
-    ctx.font = '16px sans-serif';
-    ctx.fillText(`Score: ${score}`, 10, 20);
-  };
-
-  // Desktop mouse move
-  document.addEventListener('mousemove', (e) => {
+  // Input support (mouse + touch)
+  canvas.addEventListener("mousemove", (e) => {
     basketX = e.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
   });
 
-  // Mobile touch move
-  canvas.addEventListener('touchmove', (e) => {
+  canvas.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
     basketX = touch.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
   });
 
-  const loop = () => {
-    if (Date.now() - startTime < 30000) {
-      draw();
-      if (Math.random() < 0.03) spawnObject('flag');
-      if (Math.random() < 0.01) spawnObject('bomb');
-      requestAnimationFrame(loop);
-    } else {
-      ctx.fillStyle = 'black';
-      ctx.font = '20px sans-serif';
-      ctx.fillText(`Game Over! Final Score: ${score}`, canvas.width / 2 - 100, canvas.height / 2);
-    }
-  };
+  function drawBasket() {
+    ctx.fillStyle = "blue";
+    ctx.fillRect(basketX, basketY, basketWidth, basketHeight);
+  }
 
-  loop();
-};
+  function drawFlags() {
+    ctx.fillStyle = "green";
+    for (const flag of flags) {
+      ctx.fillRect(flag.x, flag.y, 20, 20);
+    }
+  }
+
+  function drawBombs() {
+    ctx.fillStyle = "red";
+    for (const bomb of bombs) {
+      ctx.beginPath();
+      ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function drawScore() {
+    ctx.fillStyle = "black";
+    ctx.font = "20px Arial";
+    ctx.fillText(`Score: ${score}`, 10, 30);
+  }
+
+  function resetGame() {
+    score = 0;
+    flags.length = 0;
+    bombs.length = 0;
+    startTime = Date.now();
+  }
+
+  function updateGame() {
+    const elapsed = (Date.now() - startTime) / 1000;
+    if (elapsed > 30) return;
+
+    // Add new flags and bombs
+    if (Math.random() < 0.05) {
+      flags.push({ x: Math.random() * (canvas.width - 20), y: 0 });
+    }
+
+    if (Math.random() < 0.02) {
+      bombs.push({ x: Math.random() * (canvas.width - 20), y: 0 });
+    }
+
+    // Update positions
+    for (const flag of flags) flag.y += 3;
+    for (const bomb of bombs) bomb.y += 4;
+
+    // Check collisions
+    for (let i = flags.length - 1; i >= 0; i--) {
+      if (
+        flags[i].y + 20 >= basketY &&
+        flags[i].x < basketX + basketWidth &&
+        flags[i].x + 20 > basketX
+      ) {
+        flags.splice(i, 1);
+        score++;
+      }
+    }
+
+    for (let i = bombs.length - 1; i >= 0; i--) {
+      if (
+        bombs[i].y + 20 >= basketY &&
+        bombs[i].x < basketX + basketWidth &&
+        bombs[i].x + 20 > basketX
+      ) {
+        bombs.splice(i, 1);
+        score = 0;
+      }
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBasket();
+    drawFlags();
+    drawBombs();
+    drawScore();
+  }
+
+  function gameLoop() {
+    updateGame();
+    draw();
+    requestAnimationFrame(gameLoop);
+  }
+
+  resetGame();
+  gameLoop();
+});
