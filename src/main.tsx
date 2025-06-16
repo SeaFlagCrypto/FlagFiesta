@@ -5,13 +5,14 @@ window.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  const ctx = canvas.getContext("2d");
-  if (!ctx) {
+  const context = canvas.getContext("2d");
+  if (!context) {
     console.error("2D context not available!");
     return;
   }
 
-  // Set canvas dimensions
+  const ctx = context as CanvasRenderingContext2D;
+
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
@@ -30,7 +31,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const flags: { x: number; y: number }[] = [];
   const bombs: { x: number; y: number }[] = [];
 
-  // Input support (mouse + touch)
+  // Input
   canvas.addEventListener("mousemove", (e) => {
     basketX = e.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
   });
@@ -47,18 +48,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function drawFlags() {
     ctx.fillStyle = "green";
-    for (const flag of flags) {
+    flags.forEach((flag) => {
       ctx.fillRect(flag.x, flag.y, 20, 20);
-    }
+    });
   }
 
   function drawBombs() {
     ctx.fillStyle = "red";
-    for (const bomb of bombs) {
+    bombs.forEach((bomb) => {
       ctx.beginPath();
       ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
       ctx.fill();
-    }
+    });
   }
 
   function drawScore() {
@@ -78,7 +79,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const elapsed = (Date.now() - startTime) / 1000;
     if (elapsed > 30) return;
 
-    // Add new flags and bombs
     if (Math.random() < 0.05) {
       flags.push({ x: Math.random() * (canvas.width - 20), y: 0 });
     }
@@ -87,16 +87,15 @@ window.addEventListener('DOMContentLoaded', () => {
       bombs.push({ x: Math.random() * (canvas.width - 20), y: 0 });
     }
 
-    // Update positions
-    for (const flag of flags) flag.y += 3;
-    for (const bomb of bombs) bomb.y += 4;
+    flags.forEach((flag) => flag.y += 3);
+    bombs.forEach((bomb) => bomb.y += 4);
 
-    // Check collisions
     for (let i = flags.length - 1; i >= 0; i--) {
+      const flag = flags[i];
       if (
-        flags[i].y + 20 >= basketY &&
-        flags[i].x < basketX + basketWidth &&
-        flags[i].x + 20 > basketX
+        flag.y + 20 >= basketY &&
+        flag.x < basketX + basketWidth &&
+        flag.x + 20 > basketX
       ) {
         flags.splice(i, 1);
         score++;
@@ -104,10 +103,11 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     for (let i = bombs.length - 1; i >= 0; i--) {
+      const bomb = bombs[i];
       if (
-        bombs[i].y + 20 >= basketY &&
-        bombs[i].x < basketX + basketWidth &&
-        bombs[i].x + 20 > basketX
+        bomb.y + 20 >= basketY &&
+        bomb.x < basketX + basketWidth &&
+        bomb.x + 20 > basketX
       ) {
         bombs.splice(i, 1);
         score = 0;
