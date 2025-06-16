@@ -1,146 +1,134 @@
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
+window.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById("game") as HTMLCanvasElement | null;
 
-const App = () => {
-  useEffect(() => {
-    const canvas = document.getElementById("game") as HTMLCanvasElement | null;
-    if (!canvas) {
-      console.error("Canvas element not found.");
-      return;
-    }
+  if (!canvas) {
+    console.error("Canvas element not found!");
+    return;
+  }
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      console.error("Canvas context not available.");
-      return;
-    }
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    console.error("2D context not available!");
+    return;
+  }
 
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
+  const basketWidth = 80;
+  const basketHeight = 20;
+  let basketX = 0;
+  let basketY: number;
 
-    const basketWidth = 80;
-    const basketHeight = 20;
-    let basketX = canvas.width / 2 - basketWidth / 2;
-    const basketY = canvas.height - basketHeight - 10;
+  const resizeCanvas = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    basketY = canvas.height - basketHeight - 20; // Slight offset for visibility
+  };
 
-    let score = 0;
-    let startTime = Date.now();
-    const flags: { x: number; y: number }[] = [];
-    const bombs: { x: number; y: number }[] = [];
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas(); // Initial call
 
-    canvas.addEventListener("mousemove", (e) => {
-      basketX = e.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
+  let score = 0;
+  let startTime: number;
+  const flags: { x: number; y: number }[] = [];
+  const bombs: { x: number; y: number }[] = [];
+
+  canvas.addEventListener("mousemove", (e) => {
+    basketX = e.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
+  });
+
+  canvas.addEventListener("touchmove", (e) => {
+    e.preventDefault(); // Important for mobile responsiveness
+    const touch = e.touches[0];
+    basketX = touch.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
+  }, { passive: false });
+
+  function drawBasket() {
+    ctx.fillStyle = "blue";
+    ctx.fillRect(basketX, basketY, basketWidth, basketHeight);
+  }
+
+  function drawFlags() {
+    ctx.fillStyle = "green";
+    flags.forEach((flag) => {
+      ctx.fillRect(flag.x, flag.y, 20, 20);
     });
+  }
 
-    canvas.addEventListener("touchmove", (e) => {
-      e.preventDefault(); // Prevents scrolling on touch
-      const touch = e.touches[0];
-      basketX = touch.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
-    }, { passive: false });
+  function drawBombs() {
+    ctx.fillStyle = "red";
+    bombs.forEach((bomb) => {
+      ctx.beginPath();
+      ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
 
-    const drawBasket = () => {
-      ctx.fillStyle = "blue";
-      ctx.fillRect(basketX, basketY, basketWidth, basketHeight);
-    };
+  function drawScore() {
+    ctx.fillStyle = "black";
+    ctx.font = "20px Arial";
+    ctx.fillText(`Score: ${score}`, 10, 30);
+  }
 
-    const drawFlags = () => {
-      ctx.fillStyle = "green";
-      flags.forEach(flag => ctx.fillRect(flag.x, flag.y, 20, 20));
-    };
+  function resetGame() {
+    score = 0;
+    flags.length = 0;
+    bombs.length = 0;
+    startTime = Date.now();
+  }
 
-    const drawBombs = () => {
-      ctx.fillStyle = "red";
-      bombs.forEach(bomb => {
-        ctx.beginPath();
-        ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    };
+  function updateGame() {
+    const elapsed = (Date.now() - startTime) / 1000;
+    if (elapsed > 30) return;
 
-    const drawScore = () => {
-      ctx.fillStyle = "black";
-      ctx.font = "20px Arial";
-      ctx.fillText(`Score: ${score}`, 10, 30);
-    };
+    if (Math.random() < 0.05) {
+      flags.push({ x: Math.random() * (canvas.width - 20), y: 0 });
+    }
 
-    const resetGame = () => {
-      score = 0;
-      flags.length = 0;
-      bombs.length = 0;
-      startTime = Date.now();
-    };
+    if (Math.random() < 0.02) {
+      bombs.push({ x: Math.random() * (canvas.width - 20), y: 0 });
+    }
 
-    const updateGame = () => {
-      const elapsed = (Date.now() - startTime) / 1000;
-      if (elapsed > 30) return;
+    flags.forEach((flag) => flag.y += 3);
+    bombs.forEach((bomb) => bomb.y += 4);
 
-      if (Math.random() < 0.05) {
-        flags.push({ x: Math.random() * (canvas.width - 20), y: 0 });
+    for (let i = flags.length - 1; i >= 0; i--) {
+      const flag = flags[i];
+      if (
+        flag.y + 20 >= basketY &&
+        flag.x < basketX + basketWidth &&
+        flag.x + 20 > basketX
+      ) {
+        flags.splice(i, 1);
+        score++;
       }
-      if (Math.random() < 0.02) {
-        bombs.push({ x: Math.random() * (canvas.width - 20), y: 0 });
+    }
+
+    for (let i = bombs.length - 1; i >= 0; i--) {
+      const bomb = bombs[i];
+      if (
+        bomb.y + 20 >= basketY &&
+        bomb.x < basketX + basketWidth &&
+        bomb.x + 20 > basketX
+      ) {
+        bombs.splice(i, 1);
+        score = 0;
       }
+    }
+  }
 
-      flags.forEach(flag => flag.y += 3);
-      bombs.forEach(bomb => bomb.y += 4);
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBasket();
+    drawFlags();
+    drawBombs();
+    drawScore();
+  }
 
-      for (let i = flags.length - 1; i >= 0; i--) {
-        const flag = flags[i];
-        if (
-          flag.y + 20 >= basketY &&
-          flag.x < basketX + basketWidth &&
-          flag.x + 20 > basketX
-        ) {
-          flags.splice(i, 1);
-          score++;
-        }
-      }
+  function gameLoop() {
+    updateGame();
+    draw();
+    requestAnimationFrame(gameLoop);
+  }
 
-      for (let i = bombs.length - 1; i >= 0; i--) {
-        const bomb = bombs[i];
-        if (
-          bomb.y + 20 >= basketY &&
-          bomb.x < basketX + basketWidth &&
-          bomb.x + 20 > basketX
-        ) {
-          bombs.splice(i, 1);
-          score = 0;
-        }
-      }
-    };
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawBasket();
-      drawFlags();
-      drawBombs();
-      drawScore();
-    };
-
-    const gameLoop = () => {
-      updateGame();
-      draw();
-      requestAnimationFrame(gameLoop);
-    };
-
-    resetGame();
-    gameLoop();
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas);
-    };
-  }, []);
-
-  return <canvas id="game" style={{ display: 'block', width: '100%', height: '100vh' }} />;
-};
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+  resetGame();
+  gameLoop();
+});
