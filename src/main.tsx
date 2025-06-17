@@ -16,8 +16,8 @@ window.addEventListener('DOMContentLoaded', () => {
   canvas.height = window.innerHeight;
 
   window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas!.width = window.innerWidth;
+    canvas!.height = window.innerHeight;
   });
 
   const basketWidth = 60;
@@ -31,39 +31,39 @@ window.addEventListener('DOMContentLoaded', () => {
   const bombs: { x: number; y: number }[] = [];
 
   canvas.addEventListener("mousemove", (e) => {
-    basketX = e.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
+    basketX = e.clientX - canvas!.getBoundingClientRect().left - basketWidth / 2;
   });
 
   canvas.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
-    basketX = touch.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
+    basketX = touch.clientX - canvas!.getBoundingClientRect().left - basketWidth / 2;
   });
 
   function drawBasket() {
-    ctx.fillStyle = "blue";
-    ctx.fillRect(basketX, basketY, basketWidth, basketHeight);
+    ctx!.fillStyle = "blue";
+    ctx!.fillRect(basketX, basketY, basketWidth, basketHeight);
   }
 
   function drawFlags() {
-    ctx.fillStyle = "green";
+    ctx!.fillStyle = "green";
     flags.forEach((flag) => {
-      ctx.fillRect(flag.x, flag.y, 20, 20);
+      ctx!.fillRect(flag.x, flag.y, 20, 20);
     });
   }
 
   function drawBombs() {
-    ctx.fillStyle = "red";
+    ctx!.fillStyle = "red";
     bombs.forEach((bomb) => {
-      ctx.beginPath();
-      ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
-      ctx.fill();
+      ctx!.beginPath();
+      ctx!.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
+      ctx!.fill();
     });
   }
 
   function drawScore() {
-    ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
-    ctx.fillText(`Score: ${score}`, 10, 30);
+    ctx!.fillStyle = "white";
+    ctx!.font = "20px Arial";
+    ctx!.fillText(`Score: ${score}`, 10, 30);
   }
 
   function resetGame() {
@@ -78,11 +78,11 @@ window.addEventListener('DOMContentLoaded', () => {
     if (elapsed > 30) return;
 
     if (Math.random() < 0.05) {
-      flags.push({ x: Math.random() * (canvas.width - 20), y: 0 });
+      flags.push({ x: Math.random() * (canvas!.width - 20), y: 0 });
     }
 
     if (Math.random() < 0.02) {
-      bombs.push({ x: Math.random() * (canvas.width - 20), y: 0 });
+      bombs.push({ x: Math.random() * (canvas!.width - 20), y: 0 });
     }
 
     flags.forEach((flag) => flag.y += 3);
@@ -114,7 +114,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
     drawBasket();
     drawFlags();
     drawBombs();
