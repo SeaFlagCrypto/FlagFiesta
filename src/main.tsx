@@ -15,8 +15,8 @@ window.addEventListener('DOMContentLoaded', () => {
   canvas.height = window.innerHeight;
 
   window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas!.width = window.innerWidth;
+    canvas!.height = window.innerHeight;
   });
 
   let score = 0;
@@ -24,10 +24,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const flags: { x: number; y: number }[] = [];
   const bombs: { x: number; y: number }[] = [];
 
-  canvas.addEventListener("touchstart", (e) => {
+  canvas!.addEventListener("touchstart", (e) => {
     const touch = e.touches[0];
-    const clickX = touch.clientX - canvas.getBoundingClientRect().left;
-    const clickY = touch.clientY - canvas.getBoundingClientRect().top;
+    const clickX = touch.clientX - canvas!.getBoundingClientRect().left;
+    const clickY = touch.clientY - canvas!.getBoundingClientRect().top;
 
     for (let i = flags.length - 1; i >= 0; i--) {
       const f = flags[i];
@@ -49,25 +49,25 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   function drawFlags() {
-    ctx.fillStyle = "green";
+    ctx!.fillStyle = "green";
     flags.forEach((flag) => {
-      ctx.fillRect(flag.x, flag.y, 20, 20);
+      ctx!.fillRect(flag.x, flag.y, 20, 20);
     });
   }
 
   function drawBombs() {
-    ctx.fillStyle = "red";
+    ctx!.fillStyle = "red";
     bombs.forEach((bomb) => {
-      ctx.beginPath();
-      ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
-      ctx.fill();
+      ctx!.beginPath();
+      ctx!.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
+      ctx!.fill();
     });
   }
 
   function drawScore() {
-    ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
-    ctx.fillText(`Score: ${score}`, 10, 30);
+    ctx!.fillStyle = "white";
+    ctx!.font = "20px Arial";
+    ctx!.fillText(`Score: ${score}`, 10, 30);
   }
 
   function resetGame() {
@@ -94,7 +94,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function draw() {
-    ctx.clearRect(0, 0, canvas!.width, canvas!.height);
+    ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
     drawFlags();
     drawBombs();
     drawScore();
