@@ -37,26 +37,24 @@
         display: block;
         touch-action: none;
       }
+      #playAgain {
+        display: none;
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 10px 20px;
+        font-size: 18px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
     </style>
   </head>
   <body>
     <canvas id="game"></canvas>
-<button id="playAgain" style="
-  display: none;
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 10px 20px;
-  font-size: 18px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-">
-  Play Again
-</button>
-
+    <button id="playAgain">Play Again</button>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
