@@ -16,54 +16,35 @@ window.addEventListener('DOMContentLoaded', () => {
   canvas.height = window.innerHeight;
 
   window.addEventListener("resize", () => {
-    canvas!.width = window.innerWidth;
-    canvas!.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
   });
-
-  const basketWidth = 60;
-  const basketHeight = 16;
-  let basketX = canvas.width / 2 - basketWidth / 2;
-  const basketY = canvas.height - basketHeight - 10;
 
   let score = 0;
   let startTime: number;
   const flags: { x: number; y: number }[] = [];
   const bombs: { x: number; y: number }[] = [];
 
-  canvas.addEventListener("mousemove", (e) => {
-    basketX = e.clientX - canvas!.getBoundingClientRect().left - basketWidth / 2;
-  });
-
-  canvas.addEventListener("touchmove", (e) => {
-    const touch = e.touches[0];
-    basketX = touch.clientX - canvas!.getBoundingClientRect().left - basketWidth / 2;
-  });
-
-  function drawBasket() {
-    ctx!.fillStyle = "blue";
-    ctx!.fillRect(basketX, basketY, basketWidth, basketHeight);
-  }
-
   function drawFlags() {
-    ctx!.fillStyle = "green";
+    ctx.fillStyle = "green";
     flags.forEach((flag) => {
-      ctx!.fillRect(flag.x, flag.y, 20, 20);
+      ctx.fillRect(flag.x, flag.y, 30, 30);
     });
   }
 
   function drawBombs() {
-    ctx!.fillStyle = "red";
+    ctx.fillStyle = "red";
     bombs.forEach((bomb) => {
-      ctx!.beginPath();
-      ctx!.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
-      ctx!.fill();
+      ctx.beginPath();
+      ctx.arc(bomb.x + 15, bomb.y + 15, 15, 0, Math.PI * 2);
+      ctx.fill();
     });
   }
 
   function drawScore() {
-    ctx!.fillStyle = "white";
-    ctx!.font = "20px Arial";
-    ctx!.fillText(`Score: ${score}`, 10, 30);
+    ctx.fillStyle = "white";
+    ctx.font = "24px Arial";
+    ctx.fillText(`Score: ${score}`, 10, 30);
   }
 
   function resetGame() {
@@ -78,44 +59,57 @@ window.addEventListener('DOMContentLoaded', () => {
     if (elapsed > 30) return;
 
     if (Math.random() < 0.05) {
-      flags.push({ x: Math.random() * (canvas!.width - 20), y: 0 });
+      flags.push({ x: Math.random() * (canvas.width - 30), y: 0 });
     }
 
     if (Math.random() < 0.02) {
-      bombs.push({ x: Math.random() * (canvas!.width - 20), y: 0 });
+      bombs.push({ x: Math.random() * (canvas.width - 30), y: 0 });
     }
 
-    flags.forEach((flag) => flag.y += 3);
-    bombs.forEach((bomb) => bomb.y += 4);
+    flags.forEach((flag) => (flag.y += 3));
+    bombs.forEach((bomb) => (bomb.y += 4));
+  }
 
+  function handleTap(x: number, y: number) {
     for (let i = flags.length - 1; i >= 0; i--) {
       const flag = flags[i];
       if (
-        flag.y + 20 >= basketY &&
-        flag.x < basketX + basketWidth &&
-        flag.x + 20 > basketX
+        x >= flag.x &&
+        x <= flag.x + 30 &&
+        y >= flag.y &&
+        y <= flag.y + 30
       ) {
         flags.splice(i, 1);
         score++;
+        return;
       }
     }
 
     for (let i = bombs.length - 1; i >= 0; i--) {
       const bomb = bombs[i];
-      if (
-        bomb.y + 20 >= basketY &&
-        bomb.x < basketX + basketWidth &&
-        bomb.x + 20 > basketX
-      ) {
+      const dx = x - (bomb.x + 15);
+      const dy = y - (bomb.y + 15);
+      if (Math.sqrt(dx * dx + dy * dy) <= 15) {
         bombs.splice(i, 1);
         score = 0;
+        return;
       }
     }
   }
 
+  canvas.addEventListener("click", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    handleTap(e.clientX - rect.left, e.clientY - rect.top);
+  });
+
+  canvas.addEventListener("touchstart", (e) => {
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    handleTap(touch.clientX - rect.left, touch.clientY - rect.top);
+  });
+
   function draw() {
-    ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
-    drawBasket();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawFlags();
     drawBombs();
     drawScore();
