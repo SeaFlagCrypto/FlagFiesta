@@ -1,18 +1,17 @@
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById("game") as HTMLCanvasElement | null;
+
   if (!canvas) {
     console.error("Canvas element not found!");
     return;
   }
 
-  const context = canvas.getContext("2d");
-  if (!context) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
     console.error("2D context not available!");
     return;
   }
 
-  // Use type-safe non-null assertions after null checks
-  const ctx = context;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
@@ -22,7 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   const basketWidth = 60;
-  const basketHeight = 15;
+  const basketHeight = 16;
   let basketX = canvas.width / 2 - basketWidth / 2;
   const basketY = canvas.height - basketHeight - 10;
 
@@ -62,7 +61,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function drawScore() {
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = "white";
     ctx.font = "20px Arial";
     ctx.fillText(`Score: ${score}`, 10, 30);
   }
