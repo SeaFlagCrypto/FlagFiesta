@@ -1,16 +1,16 @@
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById("game") as HTMLCanvasElement | null;
-
   if (!canvas) {
     console.error("Canvas element not found!");
     return;
   }
 
-  const ctx = canvas.getContext("2d");
-  if (!ctx) {
+  const context = canvas.getContext("2d");
+  if (!context) {
     console.error("2D context not available!");
     return;
   }
+  const ctx = context as CanvasRenderingContext2D;
 
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -61,7 +61,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function drawScore() {
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "#fff";
     ctx.font = "20px Arial";
     ctx.fillText(`Score: ${score}`, 10, 30);
   }
