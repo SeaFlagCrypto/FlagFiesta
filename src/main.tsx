@@ -22,25 +22,25 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   let score = 0;
-  let startTime: number;
+  let startTime = Date.now();
   let gameEnded = false;
   const flags: { x: number; y: number }[] = [];
   const bombs: { x: number; y: number }[] = [];
 
   function drawFlags() {
     ctx.fillStyle = "green";
-    flags.forEach((flag) => {
+    for (const flag of flags) {
       ctx.fillRect(flag.x, flag.y, 30, 30);
-    });
+    }
   }
 
   function drawBombs() {
     ctx.fillStyle = "red";
-    bombs.forEach((bomb) => {
+    for (const bomb of bombs) {
       ctx.beginPath();
       ctx.arc(bomb.x + 15, bomb.y + 15, 15, 0, Math.PI * 2);
       ctx.fill();
-    });
+    }
   }
 
   function drawScore() {
@@ -70,10 +70,8 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateGame() {
-    if (gameEnded) return;
-
     const elapsed = (Date.now() - startTime) / 1000;
-    if (elapsed > 30) {
+    if (elapsed >= 30) {
       gameEnded = true;
       drawResult();
       return;
@@ -87,13 +85,11 @@ window.addEventListener('DOMContentLoaded', () => {
       bombs.push({ x: Math.random() * (canvas.width - 30), y: 0 });
     }
 
-    flags.forEach((flag) => flag.y += 3);
-    bombs.forEach((bomb) => bomb.y += 4);
+    flags.forEach((f) => f.y += 3);
+    bombs.forEach((b) => b.y += 4);
   }
 
   function draw() {
-    if (gameEnded) return;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawFlags();
     drawBombs();
@@ -104,17 +100,13 @@ window.addEventListener('DOMContentLoaded', () => {
     if (gameEnded) return;
 
     const touch = e.touches[0];
-    const touchX = touch.clientX - canvas.getBoundingClientRect().left;
-    const touchY = touch.clientY - canvas.getBoundingClientRect().top;
+    const rect = canvas.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
 
     for (let i = flags.length - 1; i >= 0; i--) {
       const flag = flags[i];
-      if (
-        touchX >= flag.x &&
-        touchX <= flag.x + 30 &&
-        touchY >= flag.y &&
-        touchY <= flag.y + 30
-      ) {
+      if (x >= flag.x && x <= flag.x + 30 && y >= flag.y && y <= flag.y + 30) {
         flags.splice(i, 1);
         score++;
         return;
@@ -123,12 +115,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     for (let i = bombs.length - 1; i >= 0; i--) {
       const bomb = bombs[i];
-      if (
-        touchX >= bomb.x &&
-        touchX <= bomb.x + 30 &&
-        touchY >= bomb.y &&
-        touchY <= bomb.y + 30
-      ) {
+      if (x >= bomb.x && x <= bomb.x + 30 && y >= bomb.y && y <= bomb.y + 30) {
         bombs.splice(i, 1);
         score = 0;
         return;
@@ -142,9 +129,11 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   function gameLoop() {
-    updateGame();
-    draw();
-    if (!gameEnded) requestAnimationFrame(gameLoop);
+    if (!gameEnded) {
+      updateGame();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
   }
 
   resetGame();
