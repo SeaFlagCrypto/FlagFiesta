@@ -31,12 +31,12 @@ window.addEventListener('DOMContentLoaded', () => {
   const bombs: { x: number; y: number }[] = [];
 
   canvas.addEventListener("mousemove", (e) => {
-    basketX = e.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
+    basketX = e.clientX - canvas!.getBoundingClientRect().left - basketWidth / 2;
   });
 
   canvas.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
-    basketX = touch.clientX - canvas.getBoundingClientRect().left - basketWidth / 2;
+    basketX = touch.clientX - canvas!.getBoundingClientRect().left - basketWidth / 2;
   });
 
   function drawBasket() {
@@ -114,7 +114,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas!.width, canvas!.height);
     drawBasket();
     drawFlags();
     drawBombs();
