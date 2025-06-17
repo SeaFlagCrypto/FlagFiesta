@@ -9,7 +9,7 @@
     "name": "FlagFiesta",
     "iconUrl": "https://flag-fiesta.vercel.app/icon.png",
     "homeUrl": "https://flag-fiesta.vercel.app",
-    "buttonTitle": "Check this out"    
+    "buttonTitle": "Play Now"
   },
   "embed": {
     "type": "miniapp",
