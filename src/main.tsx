@@ -7,7 +7,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   const ctx = canvas.getContext("2d");
-
   if (!ctx) {
     console.error("2D context not available!");
     return;
@@ -21,8 +20,8 @@ window.addEventListener('DOMContentLoaded', () => {
     canvas.height = window.innerHeight;
   });
 
-  const basketWidth = 60; // Reduced for better precision
-  const basketHeight = 15;
+  const basketWidth = 60;
+  const basketHeight = 20;
   let basketX = canvas.width / 2 - basketWidth / 2;
   const basketY = canvas.height - basketHeight - 10;
 
@@ -41,19 +40,19 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   function drawBasket() {
-    ctx.fillStyle = "#00f";
+    ctx.fillStyle = "#007BFF"; // Blue color
     ctx.fillRect(basketX, basketY, basketWidth, basketHeight);
   }
 
   function drawFlags() {
-    ctx.fillStyle = "#0f0";
+    ctx.fillStyle = "#00FF00"; // Bright green
     flags.forEach((flag) => {
       ctx.fillRect(flag.x, flag.y, 20, 20);
     });
   }
 
   function drawBombs() {
-    ctx.fillStyle = "#f00";
+    ctx.fillStyle = "#FF0000"; // Bright red
     bombs.forEach((bomb) => {
       ctx.beginPath();
       ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
@@ -62,7 +61,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function drawScore() {
-    ctx.fillStyle = "#fff"; // Ensures visibility on dark background
+    ctx.fillStyle = "#FFFFFF"; // White text
     ctx.font = "20px Arial";
     ctx.fillText(`Score: ${score}`, 10, 30);
   }
