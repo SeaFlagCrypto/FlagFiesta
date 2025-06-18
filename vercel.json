@@ -6,6 +6,10 @@
         {
           "key": "Content-Type",
           "value": "application/json"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
         }
       ]
     },
@@ -17,7 +21,15 @@
           "value": "application/json"
         }
       ]
+    },
+    {
+      "source": "/frame.html",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/html"
+        }
+      ]
     }
   ]
 }
-
