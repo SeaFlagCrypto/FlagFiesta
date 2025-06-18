@@ -5,7 +5,7 @@
     "signature": "MHg2ZTQ4ZTk1NDc3OTdjYTdhZjBiM2E0Y2IzNDI2OGQ3Y2U0MTAxMzc1MzY3NGYxMTBlNGI0MDkzMDAxNTQyOTk1NTc0ZDI2NDFkNjQyNTViZDBjM2YxODlmMzEwMmRmNTJhZWY2MGJiMTY4MTI1ZDU2MTU0ODMzOWE1MmM2YzgyNDFi"
   },
   "frame": {
-    "version": "vNext",
+    "version": "1",
     "name": "FlagFiesta",
     "icon": "https://flag-fiesta.vercel.app/icon.png",
     "postUrl": "https://flag-fiesta.vercel.app/api/frame",
@@ -14,6 +14,6 @@
   "embed": {
     "type": "miniapp",
     "url": "https://flag-fiesta.vercel.app",
-    "version": "1.0"
+    "version": "vNext"
   }
 }
