@@ -5,10 +5,10 @@
     "signature": "MHg2ZTQ4ZTk1NDc3OTdjYTdhZjBiM2E0Y2IzNDI2OGQ3Y2U0MTAxMzc1MzY3NGYxMTBlNGI0MDkzMDAxNTQyOTk1NTc0ZDI2NDFkNjQyNTViZDBjM2YxODlmMzEwMmRmNTJhZWY2MGJiMTY4MTI1ZDU2MTU0ODMzOWE1MmM2YzgyNDFi"
   },
   "frame": {
-    "version": "1",
+    "version": "vNext",
     "name": "FlagFiesta",
-    "iconUrl": "https://flag-fiesta.vercel.app/icon.png",
-    "homeUrl": "https://flag-fiesta.vercel.app",
+    "icon": "https://flag-fiesta.vercel.app/icon.png",
+    "postUrl": "https://flag-fiesta.vercel.app/api/frame",
     "buttonTitle": "Play Now"
   },
   "embed": {

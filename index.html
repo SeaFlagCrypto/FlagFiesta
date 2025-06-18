@@ -1,62 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>FlagFiesta</title>
+<html lang="en" style="height:100%; margin:0; overflow:hidden">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FlagFiesta</title>
 
-    <!-- ✅ Farcaster Meta Tags -->
-    <meta name="fc:frame" content="vNext" />
-    <meta name="fc:frame:image" content="https://flag-fiesta.vercel.app/icon.png" />
-    <meta name="fc:frame:post_url" content="https://flag-fiesta.vercel.app/api/frame" />
-    <meta name="fc:frame:button:1" content="Play Now" />
-    <meta name="fc:frame:button:1:action" content="post_redirect" />
+  <!-- Essential Farcaster frame meta tags -->
+  <meta name="fc:frame" content="vNext" />
+  <meta name="fc:frame:image" content="https://flag-fiesta.vercel.app/icon.png" />
+  <meta name="fc:frame:post_url" content="https://flag-fiesta.vercel.app/api/frame" />
+  <meta name="fc:frame:button:1" content="Play Now" />
 
-    <!-- ✅ Open Graph -->
-    <meta property="og:title" content="FlagFiesta" />
-    <meta property="og:description" content="Catch flags and avoid bombs. Can you top the leaderboard?" />
-    <meta property="og:image" content="https://flag-fiesta.vercel.app/icon.png" />
-    <meta property="og:url" content="https://flag-fiesta.vercel.app/" />
+  <!-- OG + Twitter -->
+  <meta property="og:title" content="FlagFiesta" />
+  <meta property="og:image" content="https://flag-fiesta.vercel.app/icon.png" />
+  <meta property="og:description" content="Tap the flags before time runs out!" />
+  <meta property="og:url" content="https://flag-fiesta.vercel.app/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FlagFiesta" />
+  <meta name="twitter:image" content="https://flag-fiesta.vercel.app/icon.png" />
 
-    <!-- ✅ Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="FlagFiesta" />
-    <meta name="twitter:description" content="Catch flags and avoid bombs. Can you top the leaderboard?" />
-    <meta name="twitter:image" content="https://flag-fiesta.vercel.app/icon.png" />
-
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background: #181818;
-      }
-      canvas#game {
-        width: 100vw;
-        height: 100vh;
-        display: block;
-        touch-action: none;
-      }
-      #playAgain {
-        display: none;
-        position: absolute;
-        top: 60%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 10px 20px;
-        font-size: 18px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-      }
-    </style>
-  </head>
-  <body>
-    <canvas id="game"></canvas>
-    <button id="playAgain">Play Again</button>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <style>
+    html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#181818 }
+    canvas#game { width:100vw; height:100vh; display:block; touch-action:none }
+    #playAgain { display:none; position:absolute; top:60%; left:50%; transform:translate(-50%,-50%); padding:10px 20px; font-size:18px; background:#4CAF50; color:#fff; border:none; border-radius:5px }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <button id="playAgain">Play Again</button>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
 </html>
