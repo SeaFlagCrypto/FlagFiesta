@@ -1,0 +1,19 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjE2OTQ4LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4MEJmZERDM2MwMTk0YjMzQUJBMzExOTc1MTM3ZTI1QjFENzNmNUYwNyJ9",
+    "payload": "eyJkb21haW4iOiJmbGFnLWZpZXN0YS52ZXJjZWwuYXBwIn0",
+    "signature": "MHg2ZTQ4ZTk1NDc3OTdjYTdhZjBiM2E0Y2IzNDI2OGQ3Y2U0MTAxMzc1MzY3NGYxMTBlNGI0MDkzMDAxNTQyOTk1NTc0ZDI2NDFkNjQyNTViZDBjM2YxODlmMzEwMmRmNTJhZWY2MGJiMTY4MTI1ZDU2MTU0ODMzOWE1MmM2YzgyNDFi"
+  },
+  "frame": {
+    "version": "1",
+    "name": "FlagFiesta",
+    "icon": "https://flag-fiesta.vercel.app/icon.png",
+    "postUrl": "https://flag-fiesta.vercel.app/api/frame",
+    "buttonTitle": "Play Now"
+  },
+  "embed": {
+    "type": "miniapp",
+    "url": "https://flag-fiesta.vercel.app",
+    "version": "vNext"
+  }
+}
