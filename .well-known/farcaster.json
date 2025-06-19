@@ -1,0 +1,28 @@
+{
+  "frame": {
+    "name": "FlagFiesta",
+    "version": "1",
+    "iconUrl": "https://flag-fiesta.vercel.app/icon.png",
+    "homeUrl": "https://flag-fiesta.vercel.app/",
+    "imageUrl": "https://flag-fiesta.vercel.app/icon.png",
+    "buttonTitle": "FlagFiesta",
+    "splashImageUrl": "https://flag-fiesta.vercel.app/icon.png",
+    "splashBackgroundColor": "#6200EA",
+    "subtitle": "FlagFiesta",
+    "description": "Catch the falling flags",
+    "screenshotUrls": [
+      "https://flag-fiesta.vercel.app/icon.png"
+    ],
+    "primaryCategory": "games",
+    "heroImageUrl": "https://flag-fiesta.vercel.app/icon.png",
+    "tagline": "Catch the Flags",
+    "ogTitle": "FlagFiesta",
+    "ogImageUrl": "https://flag-fiesta.vercel.app/icon.png",
+    "castShareUrl": "https://flag-fiesta.vercel.app/"
+  },
+  "accountAssociation": {
+    "header": "eyJmaWQiOjE2OTQ4LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4MEJmZERDM2MwMTk0YjMzQUJBMzExOTc1MTM3ZTI1QjFENzNmNUYwNyJ9",
+    "payload": "eyJkb21haW4iOiJmbGFnLWZpZXN0YS52ZXJjZWwuYXBwIn0",
+    "signature": "MHg2ZTQ4ZTk1NDc3OTdjYTdhZjBiM2E0Y2IzNDI2OGQ3Y2U0MTAxMzc1MzY3NGYxMTBlNGI0MDkzMDAxNTQyOTk1NTc0ZDI2NDFkNjQyNTViZDBjM2YxODlmMzEwMmRmNTJhZWY2MGJiMTY4MTI1ZDU2MTU0ODMzOWE1MmM2YzgyNDFi"
+  }
+}
