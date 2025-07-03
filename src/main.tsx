@@ -106,17 +106,13 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (gameEnded) return;
 
     const touch = e.touches[0];
-    const touchX = touch.clientX - canvas.getBoundingClientRect().left;
-    const touchY = touch.clientY - canvas.getBoundingClientRect().top;
+    const rect = canvas.getBoundingClientRect();
+    const touchX = touch.clientX - rect.left;
+    const touchY = touch.clientY - rect.top;
 
     for (let i = flags.length - 1; i >= 0; i--) {
       const flag = flags[i];
-      if (
-        touchX >= flag.x &&
-        touchX <= flag.x + 30 &&
-        touchY >= flag.y &&
-        touchY <= flag.y + 30
-      ) {
+      if (touchX >= flag.x && touchX <= flag.x + 30 && touchY >= flag.y && touchY <= flag.y + 30) {
         flags.splice(i, 1);
         score++;
         return;
@@ -125,12 +121,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     for (let i = bombs.length - 1; i >= 0; i--) {
       const bomb = bombs[i];
-      if (
-        touchX >= bomb.x &&
-        touchX <= bomb.x + 30 &&
-        touchY >= bomb.y &&
-        touchY <= bomb.y + 30
-      ) {
+      if (touchX >= bomb.x && touchX <= bomb.x + 30 && touchY >= bomb.y && touchY <= bomb.y + 30) {
         bombs.splice(i, 1);
         score = 0;
         return;
@@ -152,7 +143,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   resetGame();
   gameLoop();
 
-  // ✅ Notify Farcaster Mini App SDK that the app is ready
+  // ✅ Farcaster Mini App SDK readiness
   try {
     await sdk.actions.ready();
     console.log("Mini app is ready!");
