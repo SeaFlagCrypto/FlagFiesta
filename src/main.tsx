@@ -1,4 +1,6 @@
-window.addEventListener('DOMContentLoaded', () => {
+import { sdk } from '@farcaster/miniapp-sdk';
+
+window.addEventListener('DOMContentLoaded', async () => {
   const canvas = document.getElementById("game") as HTMLCanvasElement | null;
   const playAgainBtn = document.getElementById("playAgain") as HTMLButtonElement | null;
 
@@ -28,36 +30,36 @@ window.addEventListener('DOMContentLoaded', () => {
   const bombs: { x: number; y: number }[] = [];
 
   function drawFlags() {
-    ctx!.fillStyle = "green";
+    ctx.fillStyle = "green";
     flags.forEach((flag) => {
-      ctx!.fillRect(flag.x, flag.y, 30, 30);
+      ctx.fillRect(flag.x, flag.y, 30, 30);
     });
   }
 
   function drawBombs() {
-    ctx!.fillStyle = "red";
+    ctx.fillStyle = "red";
     bombs.forEach((bomb) => {
-      ctx!.beginPath();
-      ctx!.arc(bomb.x + 15, bomb.y + 15, 15, 0, Math.PI * 2);
-      ctx!.fill();
+      ctx.beginPath();
+      ctx.arc(bomb.x + 15, bomb.y + 15, 15, 0, Math.PI * 2);
+      ctx.fill();
     });
   }
 
   function drawScore() {
-    ctx!.fillStyle = "white";
-    ctx!.font = "20px Arial";
-    ctx!.fillText(`Score: ${score}`, 10, 30);
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+    ctx.fillText(`Score: ${score}`, 10, 30);
   }
 
   function drawResult() {
-    ctx!.fillStyle = "black";
-    ctx!.fillRect(0, 0, canvas!.width, canvas!.height);
-    ctx!.fillStyle = "white";
-    ctx!.font = "28px Arial";
-    ctx!.textAlign = "center";
-    ctx!.fillText(`Time's up!`, canvas!.width / 2, canvas!.height / 2 - 20);
-    ctx!.fillText(`Your Score: ${score}`, canvas!.width / 2, canvas!.height / 2 + 20);
-    playAgainBtn!.style.display = "block";
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    ctx.font = "28px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(`Time's up!`, canvas.width / 2, canvas.height / 2 - 20);
+    ctx.fillText(`Your Score: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
+    playAgainBtn.style.display = "block";
   }
 
   function resetGame() {
@@ -66,7 +68,7 @@ window.addEventListener('DOMContentLoaded', () => {
     bombs.length = 0;
     gameEnded = false;
     startTime = Date.now();
-    playAgainBtn!.style.display = "none";
+    playAgainBtn.style.display = "none";
   }
 
   function updateGame() {
@@ -80,11 +82,11 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     if (Math.random() < 0.04) {
-      flags.push({ x: Math.random() * (canvas!.width - 30), y: 0 });
+      flags.push({ x: Math.random() * (canvas.width - 30), y: 0 });
     }
 
     if (Math.random() < 0.02) {
-      bombs.push({ x: Math.random() * (canvas!.width - 30), y: 0 });
+      bombs.push({ x: Math.random() * (canvas.width - 30), y: 0 });
     }
 
     flags.forEach((flag) => flag.y += 3);
@@ -94,18 +96,18 @@ window.addEventListener('DOMContentLoaded', () => {
   function draw() {
     if (gameEnded) return;
 
-    ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawFlags();
     drawBombs();
     drawScore();
   }
 
-  canvas!.addEventListener("touchstart", (e) => {
+  canvas.addEventListener("touchstart", (e) => {
     if (gameEnded) return;
 
     const touch = e.touches[0];
-    const touchX = touch.clientX - canvas!.getBoundingClientRect().left;
-    const touchY = touch.clientY - canvas!.getBoundingClientRect().top;
+    const touchX = touch.clientX - canvas.getBoundingClientRect().left;
+    const touchY = touch.clientY - canvas.getBoundingClientRect().top;
 
     for (let i = flags.length - 1; i >= 0; i--) {
       const flag = flags[i];
@@ -136,7 +138,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  playAgainBtn!.addEventListener("click", () => {
+  playAgainBtn.addEventListener("click", () => {
     resetGame();
     requestAnimationFrame(gameLoop);
   });
@@ -149,4 +151,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
   resetGame();
   gameLoop();
+
+  // ✅ Notify Farcaster Mini App SDK that the app is ready
+  try {
+    await sdk.actions.ready();
+    console.log("Mini app is ready!");
+  } catch (error) {
+    console.error("Farcaster SDK ready error:", error);
+  }
 });
