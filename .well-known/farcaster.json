@@ -1,28 +1,19 @@
 {
   "frame": {
-    "name": "Flag Fiesta",
+    "name": "FlagFiesta",
     "version": "1",
     "iconUrl": "https://flag-fiesta.vercel.app/icon.png",
     "homeUrl": "https://flag-fiesta.vercel.app",
-    "imageUrl": "https://flag-fiesta.vercel.app/splash.png",
-    "buttonTitle": "FlagFiesta",
+    "imageUrl": "https://flag-fiesta.vercel.app/image.png",
     "splashImageUrl": "https://flag-fiesta.vercel.app/splash.png",
     "splashBackgroundColor": "#6200EA",
     "webhookUrl": "https://flag-fiesta.vercel.app/api/webhook",
     "subtitle": "FlagFiesta",
     "description": "Tap to catch green flags and avoid red bombs. Fast-paced reflex challenge!",
-    "screenshotUrls": [
-      "https://flag-fiesta.vercel.app/splash.png"
-    ],
     "primaryCategory": "games",
     "tags": [
       "games"
-    ],
-    "heroImageUrl": "https://flag-fiesta.vercel.app/splash.png",
-    "tagline": "Catch the Flags",
-    "ogTitle": "FlagFiesta",
-    "ogDescription": "Tap to catch green flags and avoid red bombs. Fast-paced reflex challenge!",
-    "ogImageUrl": "https://flag-fiesta.vercel.app/splash.png"
+    ]
   },
   "accountAssociation": {
     "header": "eyJmaWQiOjE2OTQ4LCJ0eXBlIjoiYXV0aCIsImtleSI6IjB4NzFiNjdFMDI5ODU1NTllOEI0YmI2YzNkYkFiNDc4N0Q3MzkyNDQzQSJ9",
