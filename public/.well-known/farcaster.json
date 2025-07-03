@@ -1,0 +1,23 @@
+{
+  "frame": {
+    "name": "FlagFiesta",
+    "version": "1",
+    "iconUrl": "https://flag-fiesta.vercel.app/icon.png",
+    "homeUrl": "https://flag-fiesta.vercel.app",
+    "imageUrl": "https://flag-fiesta.vercel.app/image.png",
+    "splashImageUrl": "https://flag-fiesta.vercel.app/splash.png",
+    "splashBackgroundColor": "#6200EA",
+    "webhookUrl": "https://flag-fiesta.vercel.app/api/webhook",
+    "subtitle": "FlagFiesta",
+    "description": "Tap to catch green flags and avoid red bombs. Fast-paced reflex challenge!",
+    "primaryCategory": "games",
+    "tags": [
+      "games"
+    ]
+  },
+  "accountAssociation": {
+    "header": "eyJmaWQiOjE2OTQ4LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4MEJmZERDM2MwMTk0YjMzQUJBMzExOTc1MTM3ZTI1QjFENzNmNUYwNyJ9",
+    "payload": "eyJkb21haW4iOiJmbGFnLWZpZXN0YS52ZXJjZWwuYXBwIn0",
+    "signature": "MHg2ZTQ4ZTk1NDc3OTdjYTdhZjBiM2E0Y2IzNDI2OGQ3Y2U0MTAxMzc1MzY3NGYxMTBlNGI0MDkzMDAxNTQyOTk1NTc0ZDI2NDFkNjQyNTViZDBjM2YxODlmMzEwMmRmNTJhZWY2MGJiMTY4MTI1ZDU2MTU0ODMzOWE1MmM2YzgyNDFi"
+  }
+}
