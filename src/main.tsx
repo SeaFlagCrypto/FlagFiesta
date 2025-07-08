@@ -1,11 +1,11 @@
 import { sdk } from '@farcaster/miniapp-sdk';
 
 window.addEventListener('DOMContentLoaded', async () => {
-  const canvas = document.getElementById("game") as HTMLCanvasElement | null;
-  const playAgainBtn = document.getElementById("playAgain") as HTMLButtonElement | null;
+  const canvas = document.getElementById("game");
+  const playAgainBtn = document.getElementById("playAgain");
 
-  if (!canvas || !playAgainBtn) {
-    console.error("Canvas or Play Again button not found!");
+  if (!(canvas instanceof HTMLCanvasElement) || !(playAgainBtn instanceof HTMLButtonElement)) {
+    console.error("Canvas or Play Again button not found or incorrect type!");
     return;
   }
 
@@ -31,9 +31,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   function drawFlags() {
     ctx.fillStyle = "green";
-    flags.forEach((flag) => {
-      ctx.fillRect(flag.x, flag.y, 30, 30);
-    });
+    flags.forEach((flag) => ctx.fillRect(flag.x, flag.y, 30, 30));
   }
 
   function drawBombs() {
