@@ -1,151 +1,102 @@
 import { sdk } from '@farcaster/miniapp-sdk';
 
-window.addEventListener('DOMContentLoaded', async () => {
-  const canvas = document.getElementById("game");
-  const playAgainBtn = document.getElementById("playAgain");
+window.addEventListener('load', async () => {
+  await sdk.actions.ready();
 
-  if (!(canvas instanceof HTMLCanvasElement) || !(playAgainBtn instanceof HTMLButtonElement)) {
-    console.error("Canvas or Play Again button not found or incorrect type!");
-    return;
-  }
+  const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
+  const playAgainBtn = document.getElementById('play-again') as HTMLButtonElement | null;
 
-  const ctx = canvas.getContext("2d");
-  if (!ctx) {
-    console.error("2D context not available!");
-    return;
-  }
+  if (!canvas || !playAgainBtn) return;
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
 
-  window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  });
-
+  const flags = ['🇺🇸', '🇬🇧', '🇮🇳', '🇫🇷', '🇯🇵', '🇧🇷'];
+  const bombs = ['💣'];
   let score = 0;
-  let startTime: number;
-  let gameEnded = false;
-  const flags: { x: number; y: number }[] = [];
-  const bombs: { x: number; y: number }[] = [];
+  let gameOver = false;
 
-  function drawFlags() {
-    ctx.fillStyle = "green";
-    flags.forEach((flag) => ctx.fillRect(flag.x, flag.y, 30, 30));
+  function randomItem(items: string[]) {
+    return items[Math.floor(Math.random() * items.length)];
   }
 
-  function drawBombs() {
-    ctx.fillStyle = "red";
-    bombs.forEach((bomb) => {
-      ctx.beginPath();
-      ctx.arc(bomb.x + 15, bomb.y + 15, 15, 0, Math.PI * 2);
-      ctx.fill();
-    });
+  function drawEmoji(emoji: string, x: number, y: number) {
+    ctx.font = '40px Arial';
+    ctx.fillText(emoji, x, y);
   }
 
   function drawScore() {
-    ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
+    ctx.fillStyle = '#000';
+    ctx.font = '20px Arial';
     ctx.fillText(`Score: ${score}`, 10, 30);
   }
 
-  function drawResult() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "white";
-    ctx.font = "28px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText(`Time's up!`, canvas.width / 2, canvas.height / 2 - 20);
-    ctx.fillText(`Your Score: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
-    playAgainBtn.style.display = "block";
+  function drawGameOver() {
+    ctx.fillStyle = 'red';
+    ctx.font = '30px Arial';
+    ctx.fillText('Game Over!', canvas.width / 2 - 80, canvas.height / 2);
+    playAgainBtn.style.display = 'block';
   }
 
-  function resetGame() {
-    score = 0;
-    flags.length = 0;
-    bombs.length = 0;
-    gameEnded = false;
-    startTime = Date.now();
-    playAgainBtn.style.display = "none";
+  let items: { emoji: string; x: number; y: number }[] = [];
+
+  function spawnItem() {
+    const emoji = Math.random() < 0.8 ? randomItem(flags) : randomItem(bombs);
+    const x = Math.random() * canvas.width;
+    items.push({ emoji, x, y: 0 });
   }
 
-  function updateGame() {
-    if (gameEnded) return;
-
-    const elapsed = (Date.now() - startTime) / 1000;
-    if (elapsed > 30) {
-      gameEnded = true;
-      drawResult();
-      return;
-    }
-
-    if (Math.random() < 0.04) {
-      flags.push({ x: Math.random() * (canvas.width - 30), y: 0 });
-    }
-
-    if (Math.random() < 0.02) {
-      bombs.push({ x: Math.random() * (canvas.width - 30), y: 0 });
-    }
-
-    flags.forEach((flag) => flag.y += 3);
-    bombs.forEach((bomb) => bomb.y += 4);
-  }
-
-  function draw() {
-    if (gameEnded) return;
+  function update() {
+    if (gameOver) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawFlags();
-    drawBombs();
+
+    items.forEach((item, index) => {
+      item.y += 2;
+      drawEmoji(item.emoji, item.x, item.y);
+
+      if (item.y > canvas.height) {
+        items.splice(index, 1);
+      }
+    });
+
     drawScore();
+    requestAnimationFrame(update);
   }
 
-  canvas.addEventListener("touchstart", (e) => {
-    if (gameEnded) return;
+  canvas.addEventListener('click', (e) => {
+    if (gameOver) return;
 
-    const touch = e.touches[0];
     const rect = canvas.getBoundingClientRect();
-    const touchX = touch.clientX - rect.left;
-    const touchY = touch.clientY - rect.top;
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
 
-    for (let i = flags.length - 1; i >= 0; i--) {
-      const flag = flags[i];
-      if (touchX >= flag.x && touchX <= flag.x + 30 && touchY >= flag.y && touchY <= flag.y + 30) {
-        flags.splice(i, 1);
-        score++;
-        return;
-      }
-    }
-
-    for (let i = bombs.length - 1; i >= 0; i--) {
-      const bomb = bombs[i];
-      if (touchX >= bomb.x && touchX <= bomb.x + 30 && touchY >= bomb.y && touchY <= bomb.y + 30) {
-        bombs.splice(i, 1);
-        score = 0;
-        return;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (
+        clickX > item.x && clickX < item.x + 40 &&
+        clickY > item.y - 40 && clickY < item.y
+      ) {
+        if (bombs.includes(item.emoji)) {
+          gameOver = true;
+          drawGameOver();
+        } else {
+          score++;
+          items.splice(i, 1);
+        }
+        break;
       }
     }
   });
 
-  playAgainBtn.addEventListener("click", () => {
-    resetGame();
-    requestAnimationFrame(gameLoop);
+  playAgainBtn.addEventListener('click', () => {
+    items = [];
+    score = 0;
+    gameOver = false;
+    playAgainBtn.style.display = 'none';
+    update();
   });
 
-  function gameLoop() {
-    updateGame();
-    draw();
-    if (!gameEnded) requestAnimationFrame(gameLoop);
-  }
-
-  resetGame();
-  gameLoop();
-
-  // ✅ Farcaster Mini App SDK readiness
-  try {
-    await sdk.actions.ready();
-    console.log("Mini app is ready!");
-  } catch (error) {
-    console.error("Farcaster SDK ready error:", error);
-  }
+  setInterval(spawnItem, 800);
+  update();
 });
